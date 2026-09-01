@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Little Message for You</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Floating Hearts Container -->
+        <div id="hearts-container" aria-hidden="true"></div>
+        
+        <!-- Floating Petals Container -->
+        <div id="petals-container" aria-hidden="true"></div>
+
+        <!-- Scene 1: Introduction -->
+        <section id="scene-intro" class="scene active" aria-label="Introduction">
+            <div class="intro-content">
+                <div class="sparkles">
+                    <span class="sparkle">✦</span>
+                    <span class="sparkle">·</span>
+                    <span class="sparkle">✦</span>
+                </div>
+                <h1 class="intro-title">A little something<br>for you...</h1>
+                <p class="intro-subtitle">I made something just for you ♡</p>
+                <button id="open-btn" class="open-button" aria-label="Open the message">
+                    <span class="button-heart">♡</span> Open
+                </button>
+                <div class="intro-paw" aria-hidden="true">🐾</div>
+            </div>
+        </section>
+
+        <!-- Scene 2: Walking Character -->
+        <section id="scene-walk" class="scene" aria-label="Character walking">
+            <div class="walk-scene">
+                <div class="ground-line"></div>
+                <div id="character" class="character">
+                    <img src="assets/giving.jpg" alt="Cute character giving a flower" class="character-image">
+                </div>
+                <div id="walking-hearts" class="walking-hearts" aria-hidden="true"></div>
+            </div>
+            <div class="walk-text">
+                <p id="walk-message">Hey...</p>
+            </div>
+        </section>
+
+        <!-- Scene 3: Flower Gift -->
+        <section id="scene-flower" class="scene" aria-label="Flower gift">
+            <div class="flower-scene">
+                <div id="flower" class="flower">
+                    <div id="rose-container" class="rose-lottie"></div>
+                </div>
+                <div id="flower-glow" class="flower-glow" aria-hidden="true"></div>
+            </div>
+            <div class="flower-text">
+                <p id="flower-message">This is for you. 🌷</p>
+            </div>
+        </section>
+
+        <!-- Scene 4: Confession -->
+        <section id="scene-confession" class="scene" aria-label="Confession">
+            <div class="confession-content">
+                <div id="confession-text-container" class="confession-text-container">
+                    <p id="confession-line-1" class="confession-line"></p>
+                    <p id="confession-line-2" class="confession-line"></p>
+                    <h1 id="confession-main" class="confession-main"></h1>
+                    <p id="confession-line-3" class="confession-line"></p>
+                </div>
+                <div id="floating-hearts-confession" class="floating-hearts-confession" aria-hidden="true"></div>
+            </div>
+        </section>
+
+        <!-- Scene 5: Personal Message -->
+        <section id="scene-message" class="scene" aria-label="Personal message">
+            <div class="message-card">
+                <div class="card-decoration top-left"></div>
+                <div class="card-decoration top-right"></div>
+                <div class="card-decoration bottom-left"></div>
+                <div class="card-decoration bottom-right"></div>
+                
+                <div class="message-content">
+                    <div class="message-heart">♡</div>
+                    <div id="message-text" class="message-text"></div>
+                    <div class="message-signature">— <span id="sender-name">Someone</span></div>
+                </div>
+                
+                <button id="replay-btn" class="replay-button" aria-label="Replay the story">
+                    <span class="replay-icon">↺</span> Replay ♡
+                </button>
+                
+                <div id="small-cat-container" class="small-cat-container" role="img" aria-label="Cute animated cat">
+                    <div id="small-cat" class="small-cat"></div>
+                    <div id="small-cat-speech" class="small-cat-speech" aria-hidden="true"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Music Control -->
+        <button id="music-btn" class="music-control" aria-label="Toggle music">
+            <span id="music-icon">🔊</span>
+        </button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

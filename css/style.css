@@ -1,0 +1,1039 @@
+/* ============================================
+   CSS Variables & Reset
+   ============================================ */
+:root {
+    --background: #fef6f0;
+    --primary: #ff8fa3;
+    --secondary: #ffb3c6;
+    --accent: #ff6b8a;
+    --text: #4a3f44;
+    --text-light: #8a7a7f;
+    --card: rgba(255, 255, 255, 0.85);
+    --shadow: rgba(255, 143, 163, 0.3);
+    --glow: rgba(255, 107, 138, 0.4);
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: var(--font-sans);
+    color: var(--text);
+    background: var(--background);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
+   App Container
+   ============================================ */
+#app {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+/* ============================================
+   Scenes Base
+   ============================================ */
+.scene {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s var(--transition-smooth), visibility 1s;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.scene.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    z-index: 10;
+}
+
+/* ============================================
+   Floating Elements
+   ============================================ */
+#hearts-container,
+#petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+}
+
+.floating-heart {
+    position: absolute;
+    font-size: 1.2rem;
+    color: var(--primary);
+    opacity: 0;
+    animation: floatHeart 4s ease-in-out forwards;
+    pointer-events: none;
+    user-select: none;
+}
+
+@keyframes floatHeart {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0.5) rotate(0deg);
+    }
+    20% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-300px) scale(1.2) rotate(20deg);
+    }
+}
+
+.floating-petal {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--secondary);
+    border-radius: 50% 0 50% 0;
+    opacity: 0;
+    animation: floatPetal 6s ease-in-out forwards;
+    pointer-events: none;
+}
+
+@keyframes floatPetal {
+    0% {
+        opacity: 0;
+        transform: translateY(0) translateX(0) rotate(0deg) scale(0.5);
+    }
+    30% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(100vh) translateX(100px) rotate(360deg) scale(1);
+    }
+}
+
+/* ============================================
+   Scene 1: Introduction
+   ============================================ */
+#scene-intro {
+    background: linear-gradient(135deg, #fef6f0 0%, #ffeef2 50%, #fff0f5 100%);
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.intro-content {
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+.sparkles {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.sparkle {
+    display: inline-block;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+.sparkle:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.sparkle:nth-child(3) {
+    animation-delay: 1s;
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 0.4; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+.intro-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+    animation: fadeInUp 1s var(--transition-smooth) 0.3s both;
+}
+
+.intro-subtitle {
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    color: var(--text-light);
+    font-weight: 300;
+    margin-bottom: 2.5rem;
+    animation: fadeInUp 1s var(--transition-smooth) 0.6s both;
+}
+
+.open-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2.5rem;
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: white;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 8px 30px var(--shadow);
+    transition: all 0.3s var(--transition-smooth);
+    animation: fadeInUp 1s var(--transition-smooth) 0.9s both;
+    position: relative;
+    overflow: hidden;
+}
+
+.open-button:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 12px 40px var(--glow);
+}
+
+.open-button:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.button-heart {
+    font-size: 1.3rem;
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.intro-paw {
+    margin-top: 3rem;
+    font-size: 1.5rem;
+    opacity: 0.4;
+    animation: fadeInUp 1s var(--transition-smooth) 1.2s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   Scene 2: Walking Character
+   ============================================ */
+#scene-walk {
+    background: linear-gradient(180deg, #fef6f0 0%, #ffeef2 60%, #ffdde6 100%);
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 15vh;
+}
+
+.walk-scene {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.ground-line {
+    position: absolute;
+    bottom: 20%;
+    left: 10%;
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+    opacity: 0.5;
+    border-radius: 1px;
+}
+
+.character {
+    position: relative;
+    transform: translateX(-50vw) scale(0.3);
+    opacity: 0;
+    transition: none;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+    width: 200px;
+    height: 200px;
+}
+
+.character.walking {
+    animation: walkToViewer 8s var(--transition-smooth) forwards;
+}
+
+@keyframes walkToViewer {
+    0% {
+        transform: translateX(-60vw) scale(0.2);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    70% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.character-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    animation: characterBob 2s ease-in-out infinite;
+}
+
+@keyframes characterBob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.character-body {
+    display: none;
+}
+
+.character-head,
+.character-torso,
+.character-arm,
+.character-legs,
+.eye,
+.blush,
+.leg {
+    display: none;
+}
+
+.walking-hearts {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.walk-text {
+    position: absolute;
+    bottom: 12vh;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 2;
+    width: 90%;
+    max-width: 400px;
+}
+
+#walk-message {
+    font-family: var(--font-serif);
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    color: var(--text);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 1s var(--transition-smooth);
+    text-align: center;
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+#walk-message.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#walk-message.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============================================
+   Scene 3: Flower Gift
+   ============================================ */
+#scene-flower {
+    background: radial-gradient(ellipse at center, #fff5f8 0%, #ffeef2 50%, #ffdde6 100%);
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.flower-scene {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flower {
+    position: relative;
+    transform: scale(0.5) translateY(100px);
+    opacity: 0;
+    transition: all 1.5s var(--transition-bounce);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flower.visible {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+.flower.give {
+    animation: giveFlower 2s var(--transition-smooth) forwards;
+}
+
+@keyframes giveFlower {
+    0% { transform: scale(1) translateY(0); }
+    50% { transform: scale(1.3) translateY(-30px); }
+    100% { transform: scale(1.5) translateY(-50px); }
+}
+
+.rose-lottie {
+    width: 200px;
+    height: 200px;
+}
+
+.rose-lottie svg {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.flower-stem,
+.flower-leaves,
+.leaf,
+.flower-head,
+.petal,
+.flower-center {
+    display: none;
+}
+
+.flower-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.flower-glow.visible {
+    opacity: 0.6;
+    animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.3; }
+}
+
+.flower-text {
+    position: absolute;
+    bottom: 12vh;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+}
+
+#flower-message {
+    font-family: var(--font-serif);
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    color: var(--text);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 1s var(--transition-smooth);
+    text-align: center;
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+#flower-message.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#flower-message.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============================================
+   Scene 4: Confession
+   ============================================ */
+#scene-confession {
+    background: linear-gradient(135deg, #fef6f0 0%, #fff0f5 50%, #ffeef2 100%);
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.confession-content {
+    text-align: center;
+    max-width: 600px;
+    padding: 2rem;
+    position: relative;
+}
+
+.confession-text-container {
+    position: relative;
+    z-index: 2;
+}
+
+.confession-line {
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: var(--text-light);
+    font-weight: 300;
+    margin-bottom: 1rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 1.2s var(--transition-smooth);
+}
+
+.confession-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.confession-main {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 600;
+    color: #ff6b8a;
+    margin: 1.5rem 0;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 1.5s var(--transition-bounce);
+    text-shadow: 0 0 40px rgba(255, 107, 138, 0.4);
+}
+
+.confession-main.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.floating-hearts-confession {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ============================================
+   Scene 5: Personal Message
+   ============================================ */
+#scene-message {
+    background: linear-gradient(135deg, #fef6f0 0%, #fff0f5 100%);
+    padding: 2rem;
+}
+
+.message-card {
+    position: relative;
+    max-width: 500px;
+    width: 90%;
+    padding: 3rem 2.5rem;
+    background: var(--card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(255, 143, 163, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: all 1s var(--transition-smooth);
+}
+
+.message-card.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.card-decoration {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--primary);
+    opacity: 0.4;
+}
+
+.top-left {
+    top: 15px;
+    left: 15px;
+    border-right: none;
+    border-bottom: none;
+    border-radius: 8px 0 0 0;
+}
+
+.top-right {
+    top: 15px;
+    right: 15px;
+    border-left: none;
+    border-bottom: none;
+    border-radius: 0 8px 0 0;
+}
+
+.bottom-left {
+    bottom: 15px;
+    left: 15px;
+    border-right: none;
+    border-top: none;
+    border-radius: 0 0 0 8px;
+}
+
+.bottom-right {
+    bottom: 15px;
+    right: 15px;
+    border-left: none;
+    border-top: none;
+    border-radius: 0 0 8px 0;
+}
+
+.message-content {
+    position: relative;
+    z-index: 1;
+}
+
+.message-heart {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    animation: heartbeat 2s ease-in-out infinite;
+}
+
+.message-text {
+    font-family: var(--font-serif);
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    line-height: 1.8;
+    color: var(--text);
+    white-space: pre-line;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 1s var(--transition-smooth) 0.3s;
+}
+
+.message-text.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.message-signature {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    color: var(--text-light);
+    font-style: italic;
+    opacity: 0;
+    transition: all 1s var(--transition-smooth) 0.6s;
+}
+
+.message-signature.visible {
+    opacity: 1;
+}
+
+.replay-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding: 0.8rem 2rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px var(--shadow);
+    transition: all 0.3s var(--transition-smooth);
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.replay-button.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 1s var(--transition-smooth) 0.9s;
+}
+
+.replay-button:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 25px var(--glow);
+}
+
+.replay-icon {
+    font-size: 1.2rem;
+}
+
+/* ============================================
+   Small Cat at Bottom of Message
+   ============================================ */
+.small-cat-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 2rem auto 0;
+    cursor: pointer;
+    transition: transform 0.3s var(--transition-bounce);
+}
+
+.small-cat-container:hover {
+    transform: scale(1.1);
+}
+
+.small-cat-container:active {
+    transform: scale(0.95);
+}
+
+.small-cat {
+    width: 100%;
+    height: 100%;
+}
+
+.small-cat-fallback {
+    font-size: 4rem;
+    text-align: center;
+    line-height: 120px;
+    animation: catBounce 2s ease-in-out infinite;
+}
+
+.small-cat-speech {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0.6rem 1rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    font-size: 0.85rem;
+    color: var(--text);
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s var(--transition-smooth);
+    border: 2px solid var(--text);
+    margin-bottom: 8px;
+}
+
+.small-cat-speech.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.small-cat-speech::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid var(--text);
+}
+
+/* ============================================
+   Music Control
+   ============================================ */
+.music-control {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+    background: var(--card);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 143, 163, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s var(--transition-smooth);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.music-control.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.music-control:hover {
+    transform: scale(1.1);
+    border-color: var(--primary);
+}
+
+.music-control.muted #music-icon {
+    opacity: 0.4;
+}
+
+/* ============================================
+   Scene Transitions
+   ============================================ */
+.scene.blur-out {
+    animation: blurOut 1s var(--transition-smooth) forwards;
+}
+
+@keyframes blurOut {
+    to {
+        opacity: 0;
+        filter: blur(10px);
+        transform: scale(1.05);
+    }
+}
+
+.scene.zoom-in {
+    animation: zoomIn 1s var(--transition-smooth) forwards;
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .floating-heart,
+    .floating-petal {
+        display: none;
+    }
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+@media (max-width: 768px) {
+    .intro-content {
+        padding: 1.5rem;
+    }
+    
+    .open-button {
+        padding: 0.9rem 2rem;
+        font-size: 1rem;
+    }
+    
+    .message-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .cat {
+        width: 120px;
+        height: 130px;
+    }
+    
+    .cat-head {
+        width: 80px;
+        height: 70px;
+    }
+    
+    .cat-torso {
+        width: 65px;
+        height: 50px;
+    }
+    
+    .flower-scene {
+        width: 250px;
+        height: 300px;
+    }
+    
+    .flower-stem {
+        height: 150px;
+    }
+    
+    .flower-head {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .petal {
+        width: 32px;
+        height: 40px;
+    }
+    
+    .music-control {
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .intro-title {
+        font-size: 1.6rem;
+    }
+    
+    .confession-main {
+        font-size: 2rem;
+    }
+    
+    .message-card {
+        padding: 1.5rem 1.2rem;
+    }
+    
+    .cat {
+        width: 100px;
+        height: 110px;
+    }
+    
+    .cat-head {
+        width: 70px;
+        height: 60px;
+    }
+    
+    .cat-torso {
+        width: 55px;
+        height: 45px;
+        top: 60px;
+    }
+    
+    .cat-paw {
+        width: 16px;
+        height: 12px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .message-card {
+        max-width: 600px;
+    }
+    
+    .cat {
+        width: 180px;
+        height: 190px;
+    }
+    
+    .cat-head {
+        width: 120px;
+        height: 100px;
+    }
+    
+    .cat-torso {
+        width: 100px;
+        height: 75px;
+        top: 95px;
+    }
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Focus styles for accessibility */
+button:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+}
+
+/* ============================================
+   Background Particles (CSS-only subtle effect)
+   ============================================ */
+.scene::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(255, 143, 163, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255, 179, 198, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.scene > * {
+    position: relative;
+    z-index: 1;
+}
