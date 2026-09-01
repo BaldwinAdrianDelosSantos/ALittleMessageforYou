@@ -260,16 +260,11 @@ function startFlowerScene() {
         elements.flowerGlow.classList.add('visible');
     }, 300);
     
-    // Give flower animation
-    setTimeout(() => {
-        elements.flower.classList.add('give');
-    }, 1500);
-    
     // Show flower message
     setTimeout(() => {
         elements.flowerMessage.textContent = CONFIG.flowerText;
         elements.flowerMessage.classList.add('visible');
-    }, 2000);
+    }, 1500);
     
     // Create petals
     const petalInterval = setInterval(() => {
@@ -284,7 +279,7 @@ function startFlowerScene() {
     setTimeout(() => {
         clearInterval(petalInterval);
         goToScene('confession');
-    }, 5000);
+    }, 5500);
 }
 
 /* ============================================
@@ -603,7 +598,7 @@ function resetExperience() {
     // Reset elements
     elements.character.classList.remove('walking');
     elements.walkMessage.classList.remove('visible');
-    elements.flower.classList.remove('visible', 'give');
+    elements.flower.classList.remove('visible');
     elements.flowerGlow.classList.remove('visible');
     elements.flowerMessage.classList.remove('visible');
     
