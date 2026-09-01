@@ -54,6 +54,8 @@ const elements = {
     openBtn: document.getElementById('open-btn'),
     musicBtn: document.getElementById('music-btn'),
     musicIcon: document.getElementById('music-icon'),
+    themeBtn: document.getElementById('theme-btn'),
+    themeIcon: document.getElementById('theme-icon'),
     character: document.getElementById('character'),
     walkMessage: document.getElementById('walk-message'),
     flower: document.getElementById('flower'),
@@ -132,6 +134,33 @@ function updateMusicIcon() {
 }
 
 /* ============================================
+   Dark Mode
+   ============================================ */
+function toggleTheme() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const newTheme = isDark ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('loveConfession_theme', newTheme);
+    
+    if (elements.themeIcon) {
+        elements.themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    }
+}
+
+function loadTheme() {
+    const savedTheme = localStorage.getItem('loveConfession_theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+    
+    document.documentElement.setAttribute('data-theme', theme);
+    
+    if (elements.themeIcon) {
+        elements.themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+}
+
+/* ============================================
    Scene Management
    ============================================ */
 function goToScene(sceneName) {
@@ -156,9 +185,12 @@ function goToScene(sceneName) {
     
     currentScene = sceneName;
     
-    // Show music button after first scene
+    // Show music and theme buttons after first scene
     if (sceneName !== 'intro') {
         elements.musicBtn.classList.add('visible');
+        if (elements.themeBtn) {
+            elements.themeBtn.classList.add('visible');
+        }
     }
     
     // Trigger scene-specific animations
@@ -602,8 +634,11 @@ function resetExperience() {
         elements.scenes.intro.classList.add('active');
     }, 100);
     
-    // Hide music button
+    // Hide music and theme buttons
     elements.musicBtn.classList.remove('visible');
+    if (elements.themeBtn) {
+        elements.themeBtn.classList.remove('visible');
+    }
     
     // Clear particles
     elements.heartsContainer.innerHTML = '';
@@ -615,6 +650,9 @@ function resetExperience() {
    Initialization
    ============================================ */
 function init() {
+    // Load saved theme
+    loadTheme();
+    
     // Set up event listeners
     elements.openBtn.addEventListener('click', () => {
         initAudio();
@@ -623,6 +661,10 @@ function init() {
     });
     
     elements.musicBtn.addEventListener('click', toggleMusic);
+    
+    if (elements.themeBtn) {
+        elements.themeBtn.addEventListener('click', toggleTheme);
+    }
     
     elements.replayBtn.addEventListener('click', resetExperience);
     
