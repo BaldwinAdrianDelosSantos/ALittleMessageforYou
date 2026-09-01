@@ -356,6 +356,8 @@ function startMessageScene() {
 function loadRoseAnimation() {
     const roseContainer = document.getElementById('rose-container');
     
+    if (!roseContainer) return;
+    
     if (roseAnimation) {
         roseAnimation.destroy();
         roseAnimation = null;
@@ -363,24 +365,36 @@ function loadRoseAnimation() {
     
     if (typeof lottie !== 'undefined') {
         try {
+            roseContainer.innerHTML = '';
+            
             roseAnimation = lottie.loadAnimation({
                 container: roseContainer,
                 renderer: 'svg',
                 loop: true,
-                autoplay: true,
+                autoplay: false,
                 path: CONFIG.roseAnimationSrc
             });
             
-            roseAnimation.setSpeed(0.5);
+            roseAnimation.addEventListener('DOMLoaded', () => {
+                roseContainer.style.opacity = '1';
+                roseContainer.style.transform = 'scale(1)';
+                
+                setTimeout(() => {
+                    roseAnimation.play();
+                }, 400);
+            });
             
             roseAnimation.addEventListener('data_failed', () => {
                 console.warn('Rose Lottie animation failed to load');
+                roseContainer.innerHTML = '<div class="rose-fallback">🌷</div>';
             });
         } catch (e) {
             console.warn('Could not load rose animation:', e);
+            roseContainer.innerHTML = '<div class="rose-fallback">🌷</div>';
         }
     } else {
         console.warn('Lottie library not loaded');
+        roseContainer.innerHTML = '<div class="rose-fallback">🌷</div>';
     }
 }
 

@@ -447,18 +447,29 @@ html, body {
     width: 200px;
     height: 200px;
     opacity: 0;
-    transform: scale(0.8);
-    transition: all 1.2s var(--transition-smooth) 0.3s;
+    transition: opacity 0.8s var(--transition-smooth) 0.5s;
 }
 
 .flower.visible .rose-lottie {
     opacity: 1;
-    transform: scale(1);
 }
 
 .rose-lottie svg {
     width: 100% !important;
     height: 100% !important;
+}
+
+.rose-fallback {
+    font-size: 8rem;
+    text-align: center;
+    line-height: 200px;
+    opacity: 0;
+    transition: opacity 0.8s var(--transition-smooth) 0.5s;
+}
+
+.flower.visible .rose-fallback {
+    opacity: 1;
+    animation: flowerFloat 3s ease-in-out infinite;
 }
 
 .flower-stem,
@@ -600,12 +611,18 @@ html, body {
 #scene-message {
     background: linear-gradient(135deg, #fef6f0 0%, #fff0f5 100%);
     padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    left: 0;
 }
 
 .message-card {
     position: relative;
     max-width: 500px;
     width: 90%;
+    margin: 0 auto;
     padding: 3rem 2.5rem;
     background: var(--card);
     backdrop-filter: blur(20px);
@@ -617,6 +634,7 @@ html, body {
     opacity: 0;
     transform: translateY(40px) scale(0.95);
     transition: all 1s var(--transition-smooth);
+    align-self: center;
 }
 
 .message-card.visible {
