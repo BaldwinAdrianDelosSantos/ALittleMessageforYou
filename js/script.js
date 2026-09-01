@@ -250,21 +250,18 @@ function startWalkScene() {
 /* ============================================
    Scene 3: Flower
    ============================================ */
-function startFlowerScene() {
-    // Load rose Lottie animation
-    loadRoseAnimation();
-    
-    // Show flower container
-    setTimeout(() => {
-        elements.flower.classList.add('visible');
-        elements.flowerGlow.classList.add('visible');
-    }, 300);
-    
-    // Show flower message
+async function startFlowerScene() {
+    // Show flower message first
     setTimeout(() => {
         elements.flowerMessage.textContent = CONFIG.flowerText;
         elements.flowerMessage.classList.add('visible');
     }, 1500);
+    
+    // Load rose Lottie animation and show when ready
+    await loadRoseAnimation();
+    
+    elements.flower.classList.add('visible');
+    elements.flowerGlow.classList.add('visible');
     
     // Create petals
     const petalInterval = setInterval(() => {
@@ -363,38 +360,54 @@ function loadRoseAnimation() {
         roseAnimation = null;
     }
     
+    roseContainer.innerHTML = '';
+    roseContainer.style.opacity = '0';
+    roseContainer.style.transform = 'scale(0.8)';
+    
     if (typeof lottie !== 'undefined') {
         try {
-            roseContainer.innerHTML = '';
-            
-            roseAnimation = lottie.loadAnimation({
-                container: roseContainer,
-                renderer: 'svg',
-                loop: true,
-                autoplay: false,
-                path: CONFIG.roseAnimationSrc
-            });
-            
-            roseAnimation.addEventListener('DOMLoaded', () => {
-                roseContainer.style.opacity = '1';
-                roseContainer.style.transform = 'scale(1)';
-                
-                setTimeout(() => {
-                    roseAnimation.play();
-                }, 400);
-            });
-            
-            roseAnimation.addEventListener('data_failed', () => {
-                console.warn('Rose Lottie animation failed to load');
-                roseContainer.innerHTML = '<div class="rose-fallback">🌷</div>';
-            });
+            fetch(CONFIG.roseAnimationSrc + '?t=' + Date.now())
+                .then(response => response.json())
+                .then(animationData => {
+                    roseAnimation = lottie.loadAnimation({
+                        container: roseContainer,
+                        renderer: 'svg',
+                        loop: true,
+                        autoplay: false,
+                        animationData: animationData
+                    });
+                    
+                    roseAnimation.addEventListener('DOMLoaded', () => {
+                        roseAnimation.goToAndStop(0, true);
+                        
+                        setTimeout(() => {
+                            roseContainer.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                            roseContainer.style.opacity = '1';
+                            roseContainer.style.transform = 'scale(1)';
+                            
+                            setTimeout(() => {
+                                roseAnimation.play();
+                            }, 400);
+                        }, 100);
+                    });
+                })
+                .catch(err => {
+                    console.warn('Could not fetch rose animation:', err);
+                    roseContainer.innerHTML = '<div class="rose-fallback">🌷</div>';
+                    roseContainer.style.opacity = '1';
+                    roseContainer.style.transform = 'scale(1)';
+                });
         } catch (e) {
             console.warn('Could not load rose animation:', e);
             roseContainer.innerHTML = '<div class="rose-fallback">🌷</div>';
+            roseContainer.style.opacity = '1';
+            roseContainer.style.transform = 'scale(1)';
         }
     } else {
         console.warn('Lottie library not loaded');
         roseContainer.innerHTML = '<div class="rose-fallback">🌷</div>';
+        roseContainer.style.opacity = '1';
+        roseContainer.style.transform = 'scale(1)';
     }
 }
 
@@ -403,47 +416,38 @@ function loadSmallCatAnimation() {
     
     if (!catContainer) return;
     
-    // Show fallback immediately
-    loadCatFallback();
-    
     if (catAnimation) {
         catAnimation.destroy();
         catAnimation = null;
     }
     
-    // Wait for container to be visible, then load Lottie
-    setTimeout(() => {
-        if (typeof lottie !== 'undefined') {
-            try {
-                catAnimation = lottie.loadAnimation({
-                    container: catContainer,
-                    renderer: 'svg',
-                    loop: true,
-                    autoplay: true,
-                    path: CONFIG.catAnimationSrc
-                });
-                
-                catAnimation.addEventListener('DOMLoaded', () => {
-                    // Clear fallback once Lottie loads
-                    const fallback = catContainer.querySelector('.small-cat-fallback');
-                    if (fallback) {
-                        fallback.style.display = 'none';
-                    }
-                });
-                
-                catAnimation.addEventListener('data_failed', () => {
-                    console.warn('Cat Lottie animation failed to load, using fallback');
+    catContainer.innerHTML = '';
+    
+    if (typeof lottie !== 'undefined') {
+        try {
+            fetch(CONFIG.catAnimationSrc + '?t=' + Date.now())
+                .then(response => response.json())
+                .then(animationData => {
+                    catAnimation = lottie.loadAnimation({
+                        container: catContainer,
+                        renderer: 'svg',
+                        loop: true,
+                        autoplay: true,
+                        animationData: animationData
+                    });
+                })
+                .catch(err => {
+                    console.warn('Could not fetch cat animation:', err);
                     loadCatFallback();
                 });
-            } catch (e) {
-                console.warn('Could not load cat animation:', e);
-                loadCatFallback();
-            }
-        } else {
-            console.warn('Lottie library not loaded, using CSS fallback');
+        } catch (e) {
+            console.warn('Could not load cat animation:', e);
             loadCatFallback();
         }
-    }, 300);
+    } else {
+        console.warn('Lottie library not loaded, using CSS fallback');
+        loadCatFallback();
+    }
 }
 
 function loadCatFallback() {
@@ -636,12 +640,16 @@ function resetExperience() {
     
     // Reset state
     currentScene = 'intro';
+    isTransitioning = false;
     catClickCount = 0;
     
-    // Show intro scene
+    // Show intro scene immediately without transition
+    elements.scenes.intro.style.transition = 'none';
+    elements.scenes.intro.classList.add('active');
+    elements.scenes.intro.offsetHeight; // Force reflow
     setTimeout(() => {
-        elements.scenes.intro.classList.add('active');
-    }, 100);
+        elements.scenes.intro.style.transition = '';
+    }, 50);
     
     // Hide music and theme buttons
     elements.musicBtn.classList.remove('visible');
@@ -661,6 +669,60 @@ function resetExperience() {
 function init() {
     // Load saved theme
     loadTheme();
+    
+    // Ensure all scenes are hidden except intro
+    Object.values(elements.scenes).forEach(scene => {
+        if (scene) scene.classList.remove('active');
+    });
+    elements.scenes.intro.classList.add('active');
+    
+    // Reset all state
+    currentScene = 'intro';
+    isTransitioning = false;
+    catClickCount = 0;
+    confessionTimeouts = [];
+    
+    // Destroy any existing animations
+    if (roseAnimation) {
+        roseAnimation.destroy();
+        roseAnimation = null;
+    }
+    if (catAnimation) {
+        catAnimation.destroy();
+        catAnimation = null;
+    }
+    
+    // Clear all containers
+    if (elements.smallCatContainer) {
+        elements.smallCatContainer.innerHTML = '';
+    }
+    elements.heartsContainer.innerHTML = '';
+    elements.petalsContainer.innerHTML = '';
+    elements.walkingHearts.innerHTML = '';
+    
+    // Reset all UI elements
+    elements.character.classList.remove('walking');
+    elements.walkMessage.classList.remove('visible');
+    elements.flower.classList.remove('visible');
+    elements.flowerGlow.classList.remove('visible');
+    elements.flowerMessage.classList.remove('visible');
+    elements.confessionLines.forEach(line => {
+        line.classList.remove('visible');
+        line.textContent = '';
+    });
+    elements.messageText.classList.remove('visible');
+    elements.messageText.parentElement.parentElement.classList.remove('visible');
+    elements.senderName.parentElement.classList.remove('visible');
+    elements.replayBtn.classList.remove('visible');
+    if (elements.smallCatSpeech) {
+        elements.smallCatSpeech.classList.remove('visible');
+    }
+    
+    // Hide buttons
+    elements.musicBtn.classList.remove('visible');
+    if (elements.themeBtn) {
+        elements.themeBtn.classList.remove('visible');
+    }
     
     // Set up event listeners
     elements.openBtn.addEventListener('click', () => {
@@ -708,12 +770,16 @@ function init() {
         }
     }, 3000);
     
-    // Set initial scene
-    elements.scenes.intro.classList.add('active');
-    
     console.log('💕 A Little Message for You - Ready');
     console.log('📝 Edit CONFIG in js/script.js to customize the message');
 }
+
+// Handle page show event for bfcache
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        resetExperience();
+    }
+});
 
 /* ============================================
    Start the app

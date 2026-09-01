@@ -334,6 +334,7 @@ html, body {
     height: 100%;
     object-fit: contain;
     animation: characterBob 2s ease-in-out infinite;
+    mix-blend-mode: multiply;
 }
 
 @keyframes characterBob {
