@@ -150,6 +150,7 @@ function toggleTheme() {
 
 function loadTheme() {
     document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.removeItem('loveConfession_theme');
     
     if (elements.themeIcon) {
         elements.themeIcon.textContent = '🌙';

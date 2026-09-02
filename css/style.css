@@ -44,6 +44,7 @@ html, body {
     background: var(--background);
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
+    color-scheme: light;
 }
 
 /* ============================================
