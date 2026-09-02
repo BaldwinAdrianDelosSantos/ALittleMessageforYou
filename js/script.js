@@ -149,13 +149,10 @@ function toggleTheme() {
 }
 
 function loadTheme() {
-    const savedTheme = localStorage.getItem('loveConfession_theme');
-    const theme = savedTheme || 'light';
-    
-    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('data-theme', 'light');
     
     if (elements.themeIcon) {
-        elements.themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+        elements.themeIcon.textContent = '🌙';
     }
 }
 
